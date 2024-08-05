@@ -9,10 +9,11 @@ import { Image } from "../image/Image";
 import { Header } from "../header/Header";
 import { normalizeEmail } from "../../utils/normalizeEmail";
 import { setCurrentUser as _setCurrentUser } from "../../utils/currentUser";
+import { setUsers as _setUsers } from "../../utils/users";
 import { Sidebar } from "./Sidebar";
 
 const database = getDatabase(config);
-const collectionRef = ref(database, "users");
+const usersRef = ref(database, "users");
 const token = getToken();
 
 function Dashboard() {
@@ -32,7 +33,7 @@ function Dashboard() {
   }
 
   const fetchUsers = () => {
-    onValue(collectionRef, (snapshot) => {
+    onValue(usersRef, (snapshot) => {
       const usersMap = snapshot.val();
       if (usersMap) {
         const normalizedEmail = normalizeEmail(token);
@@ -42,6 +43,7 @@ function Dashboard() {
         }
         
         const usersInfo = Object.values(usersMap);
+        _setUsers(usersInfo);
         setUsers(usersInfo);
       }
     });

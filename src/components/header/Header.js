@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Menu, MenuButton, MenuGroup, MenuItem, MenuList, T
 import { Image } from "../image/Image";
 import './Header.css';
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { AddTransaction } from "../addTransaction/AddTransaction";
 
 export const Header = ({ username, onLogout }) => {
   return (
@@ -16,6 +17,7 @@ export const Header = ({ username, onLogout }) => {
     >
       <Image src="/header-icon.png" alt="header icon" width="40px" height="40px" />
       <Text fontSize="24px" fontWeight="bold">Better Split</Text>
+      <AddTransaction />
       <Box ml="auto">
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
