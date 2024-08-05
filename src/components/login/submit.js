@@ -1,9 +1,6 @@
 import { getDatabase, get, set, ref, child } from "firebase/database";
 import config from "../../firebase";
-
-const normalizeEmail = (email) => {
-  return email.replace(/\./g, '');
-};
+import { normalizeEmail } from "../../utils/normalizeEmail";
 
 const SIGN_UP_ERROR = 'This email has already signed up.';
 
@@ -20,7 +17,7 @@ export const signUp = async ({ username, email, password }) => {
   }
 
   return set(ref(db, 'users/' + normalizedEmail), {
-    username,
+    name: username,
     email,
     password
   });

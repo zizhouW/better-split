@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate  } from "react-router-dom";
 import { Box, Button, Input, Link, Text, Stack, InputGroup, InputLeftElement, useToast} from "@chakra-ui/react"
 import { EmailIcon, InfoIcon, LockIcon, StarIcon } from "@chakra-ui/icons";
@@ -6,6 +6,7 @@ import './Login.css';
 import { signUp, login } from "./submit";
 import { setToken } from "../../utils/localStorage";
 import { isInviteCodeCorrect } from "../../utils/inviteCode";
+import { Image } from "../image/Image";
 
 const LOGIN = 'Login';
 const SIGNUP = 'Sign up';
@@ -28,6 +29,7 @@ export const Login = () => {
 
   const toast = useToast();
   const navigate = useNavigate();
+  const submitButtonRef = useRef(null);
 
   const toggleSignUp = () => {
     if (isSignUp) {
@@ -104,8 +106,8 @@ export const Login = () => {
           status: 'success',
           duration: 3000,
           isClosable: true,
-          onCloseComplete: redirectToHomePage,
         });
+        redirectToHomePage();
       }).catch((err) => {
         toast({
           title: 'Error signing up',
@@ -134,8 +136,8 @@ export const Login = () => {
           status: 'success',
           duration: 3000,
           isClosable: true,
-          onCloseComplete: redirectToHomePage,
         });
+        redirectToHomePage();
       }).catch((err) => {
         toast({
           title: 'Error logging in',
@@ -165,6 +167,20 @@ export const Login = () => {
     return (
       <Box m="auto" mt="40px" maxW="800px">
         <Stack spacing={4}>
+          {/* Invite code */}
+          {isSignUp ? (
+            <InputGroup>
+              <InputLeftElement pointerEvents='none' color='gold' fontSize='1.2em'>
+                <StarIcon color="gold" />
+              </InputLeftElement>
+              <Input
+                placeholder='Enter invite code'
+                value={inviteCode}
+                onChange={(event) => setInviteCode(event.target.value)}
+              />
+            </InputGroup>
+          ) : null}
+
           {/* Username */}
           {isSignUp ? (
             <InputGroup>
@@ -216,20 +232,6 @@ export const Login = () => {
             />
           </InputGroup>
 
-          {/* Invite code */}
-          {isSignUp ? (
-            <InputGroup>
-              <InputLeftElement pointerEvents='none' color='gold' fontSize='1.2em'>
-                <StarIcon color="gold" />
-              </InputLeftElement>
-              <Input
-                placeholder='Enter invite code'
-                value={inviteCode}
-                onChange={(event) => setInviteCode(event.target.value)}
-              />
-            </InputGroup>
-          ) : null}
-
           <Box color="crimson" mb={4}>
             <Box>{isUsernameInvalid ? '- Username must be alphanumeric and at least 3 characters long' : null}</Box>
             <Box>{isEmailInvalid ? '- Wrong email format' : null}</Box>
@@ -238,7 +240,7 @@ export const Login = () => {
 
           <Box w="100%" display="flex" alignItems="center" justifyContent="space-between">
             <Link color='blue.500' onClick={toggleSignUp}>{isSignUp ? LOGIN : SIGNUP}</Link>
-            <Button colorScheme='blue' size='lg' onClick={onSubmit} isDisabled={isSubmitDisabled}>
+            <Button colorScheme='blue' size='lg' onClick={onSubmit} isDisabled={isSubmitDisabled} ref={submitButtonRef}>
               {isSignUp ? SIGNUP : LOGIN}
             </Button>
           </Box>
@@ -250,7 +252,7 @@ export const Login = () => {
   return (
     <div className="container">
       <Box mt="52px" display="flex" flexDirection="column" alignItems="center" gap={4}>
-        <img src="/icon.png" alt="icon" />
+        <Image src="/icon.png" alt="icon" />
         <Text fontSize={50} fontWeight="bold" textAlign="center">
           {isDoubleTake > 1 ? 'Damn... make up your mind?' : 'Welcome to BetterSplit!'}
         </Text>

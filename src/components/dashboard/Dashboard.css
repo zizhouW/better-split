@@ -9,3 +9,15 @@
   width: 600px;
   margin: auto;
 }
+
+.sidebar {
+  border-right: 1px solid gray;
+  height: 100%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+}

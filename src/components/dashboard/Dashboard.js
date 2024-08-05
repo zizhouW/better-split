@@ -4,78 +4,88 @@ import config from "../../firebase"; // Assuming the correct path to your config
 import { getDatabase, ref, onValue } from "firebase/database";
 import './Dashboard.css';
 import { getToken, removeToken } from "../../utils/localStorage";
-import { Button, useToast } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
+import { Image } from "../image/Image";
+import { Header } from "../header/Header";
+import { normalizeEmail } from "../../utils/normalizeEmail";
+import { setCurrentUser as _setCurrentUser } from "../../utils/currentUser";
+import { Sidebar } from "./Sidebar";
+
+const database = getDatabase(config);
+const collectionRef = ref(database, "users");
+const token = getToken();
 
 function Dashboard() {
   const navigate = useNavigate();
   const toast = useToast();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const navigateToLogin = () => {
     navigate("/login");
   }
 
   const isLoggedIn = () => {
-    const token = getToken();
-
     return !!token;
   }
 
+  const fetchUsers = () => {
+    onValue(collectionRef, (snapshot) => {
+      const usersMap = snapshot.val();
+      if (usersMap) {
+        const normalizedEmail = normalizeEmail(token);
+        if (usersMap[normalizedEmail]) {
+          _setCurrentUser(usersMap[normalizedEmail]);
+          setCurrentUser(usersMap[normalizedEmail]);
+        }
+        
+        const usersInfo = Object.values(usersMap);
+        setUsers(usersInfo);
+      }
+    });
+  };
+
   useEffect(() => {
-    if (!isLoggedIn()) {
-      setTimeout(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+      if (!isLoggedIn()) {
         navigateToLogin();
-      }, 1000);
-    }
+      }
+    }, 1000);
+
+    fetchUsers();
   }, []);
 
   const logout = () => {
     removeToken();
     toast({
       title: 'Successfully logged out',
-      description: 'You\'ll be redirected soon...',
       status: 'success',
       duration: 3000,
       isClosable: true,
-      onCloseComplete: () => navigate('/login'),
     });
+    navigate('/login');
   }
 
-  // // Initialize the Firebase database with the provided configuration
-  // const database = getDatabase(config);
-  
-  // // Reference to the specific collection in the database
-  // const collectionRef = ref(database, "users");
-
-  // // Function to fetch data from the database
-  // const fetchData = () => {
-  //   // Listen for changes in the collection
-  //   onValue(collectionRef, (snapshot) => {
-  //     const dataItem = snapshot.val();
-  //     // Check if dataItem exists
-  //     if (dataItem) {
-  //       // Convert the object values into an array
-  //       const displayItem = Object.values(dataItem);
-  //       setData(displayItem);
-  //     }
-  //   });
-  // };
-
-  // // Fetch data when the component mounts
-  // fetchData();
-
-  if (!isLoggedIn()) {
+  if (isLoading) {
     return (
-      <div className="loading">
-        <img src="/loading.gif" alt="Loading..."/>
-      </div>
+      <Box className="loading">
+        <Image src="/loading.gif" alt="Loading..."/>
+      </Box>
     );
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <Button colorScheme="blue" onClick={logout}>Log out</Button>
-    </div>
+    <>
+      <Header username={currentUser?.name || ''} onLogout={logout} />
+      <Box display="flex" h="calc(100% - 57px)" w="250px">
+        <Box className="sidebar" >
+          <Sidebar users={users} />
+        </Box>
+      </Box>
+    </>
   );
 }
 
