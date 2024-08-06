@@ -17,6 +17,7 @@ export const EditCustomAmount = ({ shouldRender, baseAmount, onSubmit, name }) =
   const handleSubmit = () => {
     setTimeout(() => {
       if (!isValid) return;
+      console.log(amount)
       onSubmit(amount);
       onClose();
     }, 100);
@@ -50,7 +51,7 @@ export const EditCustomAmount = ({ shouldRender, baseAmount, onSubmit, name }) =
           <ModalCloseButton />
           <ModalBody>
             <Text mb="4px" color="gray.300" fontSize="14px"><b>{name}</b>'s current amount is&nbsp;
-              <Text as="span" color="#81c995">{dollar(baseAmount)}</Text>
+              <Text as="span" color="#81c995">{dollar(baseAmount || 0)}</Text>
             </Text>
             <InputGroup mb="4px">
               <InputLeftElement pointerEvents="none" color="#81c995" fontSize="1.2em">$</InputLeftElement>

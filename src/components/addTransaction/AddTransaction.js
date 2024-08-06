@@ -168,8 +168,6 @@ export const AddTransaction = ({ refresh }) => {
   }
 
   const onUpdateCustomAmount = (email, value) => {
-    if (!splitMap[email]) return;
-
     splitMap[email] = value;
     setUpdateCount(updateCount + 1);
   };

@@ -24,7 +24,7 @@ export const Sidebar = ({ users }) => {
           if (!user) return null;
 
           const isCurrentUser = user.email === token;
-          const oweing = user.oweing[normalizeEmail(token)];
+          const oweing = user.oweing?.[normalizeEmail(token)];
 
           return (
             <Box display="flex" key={user.email} alignItems="center">

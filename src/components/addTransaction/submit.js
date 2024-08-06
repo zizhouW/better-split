@@ -26,7 +26,7 @@ export const addTransaction = async ({ name, year, month, day, amount, splits })
   const currentUserRef = ref(db, `/users/${currentUserId}`);
   await runTransaction(currentUserRef, (currentUser) => {
     if (currentUser) {
-      const currentUserOweings = currentUser.oweing;
+      const currentUserOweings = currentUser.oweing || {};
       Object.entries(splits).forEach(([email, value]) => {
         if (!currentUserOweings[email]) {
           currentUserOweings[email] = -value;
@@ -42,7 +42,7 @@ export const addTransaction = async ({ name, year, month, day, amount, splits })
     const userRef = ref(db, `/users/${email}`);
     return runTransaction(userRef, (user) => {
       if (user) {
-        const userOweings = user.oweing;
+        const userOweings = user.oweing || {};
         if (!userOweings[currentUserId]) {
           userOweings[currentUserId] = value;
         } else {
