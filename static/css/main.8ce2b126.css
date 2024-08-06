@@ -1,0 +1,2 @@
+html{height:100vh;width:100vw}body{display:flex;height:100%;margin:0}#root,body{width:100%}.loading{display:flex;height:100vh;width:100vw}.loading img{margin:auto;max-width:80%;width:600px}.sidebar{border-right:1px solid gray;height:100%;min-width:250px;width:250px}@media only screen and (max-width:600px){.name,.sidebar{display:none}}img.empty{max-width:400px;width:auto}.container{margin-left:24px;margin-right:24px}
+/*# sourceMappingURL=main.8ce2b126.css.map*/
