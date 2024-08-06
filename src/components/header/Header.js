@@ -4,7 +4,7 @@ import './Header.css';
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { AddTransaction } from "../addTransaction/AddTransaction";
 
-export const Header = ({ username, onLogout, refresh }) => {
+export const Header = ({ username, onLogout, refresh, children }) => {
   return (
     <Box
       display="flex"
@@ -15,6 +15,7 @@ export const Header = ({ username, onLogout, refresh }) => {
       px="12px"
       py="8px"
     >
+      {children}
       <Image src="/header-icon.png" alt="header icon" width="40px" height="40px" />
       <Text fontSize="24px" fontWeight="bold" className="name">Better Split</Text>
       <AddTransaction refresh={refresh} />

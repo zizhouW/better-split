@@ -2,14 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate  } from "react-router-dom";
 import './Dashboard.css';
 import { getToken, removeToken } from "../../utils/localStorage";
-import { Box, useToast } from "@chakra-ui/react";
+import { Box, Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure, useToast } from "@chakra-ui/react";
 import { Image } from "../image/Image";
 import { Header } from "../header/Header";
 import { getCurrentUser, getUsers } from "../../utils/users";
 import { Sidebar } from "./Sidebar";
 import { Transactions } from "../transactions/Transactions";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 function Dashboard() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -18,7 +20,7 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [refreshTransactions, setRefreshTransactions] = useState(0);
+  const [refreshCount, setRefreshCount] = useState(0);
 
   const navigateToLogin = useCallback(() => {
     navigate("/login");
@@ -43,10 +45,7 @@ function Dashboard() {
     }, 1000);
 
     fetchUsers();
-    // setInterval(() => {
-    //   fetchUsers();
-    // }, 5000);
-  }, [navigateToLogin]);
+  }, [navigateToLogin, fetchUsers, refreshCount]);
 
   const logout = () => {
     removeToken();
@@ -60,7 +59,7 @@ function Dashboard() {
   };
 
   const refresh = () => {
-    setRefreshTransactions(refreshTransactions + 1);
+    setRefreshCount(refreshCount + 1);
   };
 
   if (isLoading) {
@@ -71,15 +70,39 @@ function Dashboard() {
     );
   }
 
+  const renderSidebar = () => (
+    <Sidebar users={users.filter((user) => user.email !== token)} />
+  );
+
+  const renderMobileSidebar = () => {
+    return (
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerBody className="mobile-sidebar">
+            {renderSidebar()}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    );
+  };
+
   return (
     <>
-      <Header username={currentUser?.name || ''} onLogout={logout} refresh={refresh} />
+      <Header username={currentUser?.name || ''} onLogout={logout} refresh={refresh}>
+        <Box className="mobile-sidebar-container">
+          <Button onClick={onOpen}>
+            <HamburgerIcon />
+          </Button>
+          {renderMobileSidebar()}
+        </Box>
+      </Header>
       <Box display="flex" h="calc(100% - 57px)">
         <Box className="sidebar">
-          <Sidebar users={users.filter((user) => user.email !== token)} />
+          {renderSidebar()}
         </Box>
         <Box flexGrow={1}>
-          <Transactions refreshTransactions={refreshTransactions}/>
+          <Transactions refreshTransactions={refreshCount}/>
         </Box>
       </Box>
     </>

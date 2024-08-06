@@ -3,8 +3,9 @@ import { getToken } from "../../utils/localStorage";
 import { normalizeEmail } from "../../utils/normalizeEmail";
 import { dollar } from "../../utils/dollar";
 
-const token = getToken();
 export const Sidebar = ({ users }) => {
+  const token = getToken();
+
   const renderOweing = (oweing) => {
     if (!oweing) return null;
 

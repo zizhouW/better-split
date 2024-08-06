@@ -17,8 +17,16 @@
   width: 250px;
 }
 
+.mobile-sidebar-container {
+  display: none;
+}
+
 @media only screen and (max-width: 600px) {
   .sidebar {
     display: none;
+  }
+
+  .mobile-sidebar-container {
+    display: block;
   }
 }
