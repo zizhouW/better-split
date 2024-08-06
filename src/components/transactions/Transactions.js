@@ -41,7 +41,7 @@ export const Transactions = ({ refreshTransactions }) => {
   const renderTransactions = () => (
     <>
       <TransactionGroup transactions={transactions} />
-      <Box position='relative' pt="100px" padding="20%">
+      <Box position='relative' padding="200px" pt="200px">
         <Divider />
         <AbsoluteCenter px='16px' color="gray.400" bg="gray.800" fontSize="14px">
           no more
