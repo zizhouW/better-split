@@ -1,6 +1,7 @@
 import { Avatar, Box, Stack, Text } from "@chakra-ui/react";
 import { getToken } from "../../utils/localStorage";
 import { normalizeEmail } from "../../utils/normalizeEmail";
+import { dollar } from "../../utils/dollar";
 
 const token = getToken();
 export const Sidebar = ({ users }) => {
@@ -8,10 +9,10 @@ export const Sidebar = ({ users }) => {
     if (!oweing) return null;
 
     if (oweing > 0) {
-      return <Text as="span" color="#39FF14" fontWeight="normal">owes you {oweing}</Text>;
+      return <Text as="span" color="#81c995" fontWeight="normal">owes you <b>{dollar(oweing)}</b></Text>;
     }
 
-    return <Text as="span" color="#FFAC1C" fontWeight="normal">you owe {oweing}</Text>
+    return <Text as="span" color="#f28b82" fontWeight="normal">you owe <b>{dollar(oweing)}</b></Text>
   };
 
   return (

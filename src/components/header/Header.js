@@ -4,7 +4,7 @@ import './Header.css';
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { AddTransaction } from "../addTransaction/AddTransaction";
 
-export const Header = ({ username, onLogout }) => {
+export const Header = ({ username, onLogout, refresh }) => {
   return (
     <Box
       display="flex"
@@ -16,8 +16,8 @@ export const Header = ({ username, onLogout }) => {
       py="8px"
     >
       <Image src="/header-icon.png" alt="header icon" width="40px" height="40px" />
-      <Text fontSize="24px" fontWeight="bold">Better Split</Text>
-      <AddTransaction />
+      <Text fontSize="24px" fontWeight="bold" className="name">Better Split</Text>
+      <AddTransaction refresh={refresh} />
       <Box ml="auto">
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

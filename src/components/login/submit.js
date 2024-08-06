@@ -19,7 +19,8 @@ export const signUp = async ({ username, email, password }) => {
   return set(ref(db, 'users/' + normalizedEmail), {
     name: username,
     email,
-    password
+    password,
+    oweing: {},
   });
 };
 

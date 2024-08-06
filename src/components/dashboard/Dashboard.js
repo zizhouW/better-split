@@ -1,52 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate  } from "react-router-dom";
-import config from "../../firebase"; // Assuming the correct path to your configuration file
-import { getDatabase, ref, onValue } from "firebase/database";
 import './Dashboard.css';
 import { getToken, removeToken } from "../../utils/localStorage";
-import { Box, Button, useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import { Image } from "../image/Image";
 import { Header } from "../header/Header";
-import { normalizeEmail } from "../../utils/normalizeEmail";
-import { setCurrentUser as _setCurrentUser } from "../../utils/currentUser";
-import { setUsers as _setUsers } from "../../utils/users";
+import { getCurrentUser, getUsers } from "../../utils/users";
 import { Sidebar } from "./Sidebar";
-
-const database = getDatabase(config);
-const usersRef = ref(database, "users");
-const token = getToken();
+import { Transactions } from "../transactions/Transactions";
 
 function Dashboard() {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const token = getToken();
+
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [refreshTransactions, setRefreshTransactions] = useState(0);
 
-  const navigateToLogin = () => {
+  const navigateToLogin = useCallback(() => {
     navigate("/login");
-  }
+  }, [navigate]);
 
   const isLoggedIn = () => {
     return !!token;
   }
 
-  const fetchUsers = () => {
-    onValue(usersRef, (snapshot) => {
-      const usersMap = snapshot.val();
-      if (usersMap) {
-        const normalizedEmail = normalizeEmail(token);
-        if (usersMap[normalizedEmail]) {
-          _setCurrentUser(usersMap[normalizedEmail]);
-          setCurrentUser(usersMap[normalizedEmail]);
-        }
-        
-        const usersInfo = Object.values(usersMap);
-        _setUsers(usersInfo);
-        setUsers(usersInfo);
-      }
-    });
+  const fetchUsers = async () => {
+    const users = await getUsers();
+    setUsers(users);
+    setCurrentUser(await getCurrentUser());
   };
 
   useEffect(() => {
@@ -58,7 +43,10 @@ function Dashboard() {
     }, 1000);
 
     fetchUsers();
-  }, []);
+    // setInterval(() => {
+    //   fetchUsers();
+    // }, 5000);
+  }, [navigateToLogin]);
 
   const logout = () => {
     removeToken();
@@ -69,7 +57,11 @@ function Dashboard() {
       isClosable: true,
     });
     navigate('/login');
-  }
+  };
+
+  const refresh = () => {
+    setRefreshTransactions(refreshTransactions + 1);
+  };
 
   if (isLoading) {
     return (
@@ -81,10 +73,13 @@ function Dashboard() {
 
   return (
     <>
-      <Header username={currentUser?.name || ''} onLogout={logout} />
-      <Box display="flex" h="calc(100% - 57px)" w="250px">
-        <Box className="sidebar" >
-          <Sidebar users={users} />
+      <Header username={currentUser?.name || ''} onLogout={logout} refresh={refresh} />
+      <Box display="flex" h="calc(100% - 57px)">
+        <Box className="sidebar">
+          <Sidebar users={users.filter((user) => user.email !== token)} />
+        </Box>
+        <Box flexGrow={1}>
+          <Transactions refreshTransactions={refreshTransactions}/>
         </Box>
       </Box>
     </>

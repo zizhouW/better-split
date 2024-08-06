@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate  } from "react-router-dom";
 import { Box, Button, Input, Link, Text, Stack, InputGroup, InputLeftElement, useToast} from "@chakra-ui/react"
 import { EmailIcon, InfoIcon, LockIcon, StarIcon } from "@chakra-ui/icons";
 import './Login.css';
 import { signUp, login } from "./submit";
-import { setToken } from "../../utils/localStorage";
+import { getToken, setToken } from "../../utils/localStorage";
 import { isInviteCodeCorrect } from "../../utils/inviteCode";
 import { Image } from "../image/Image";
 
@@ -30,6 +30,17 @@ export const Login = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const submitButtonRef = useRef(null);
+
+  const redirectToHomePage = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      redirectToHomePage();
+    }
+  }, [redirectToHomePage]);
 
   const toggleSignUp = () => {
     if (isSignUp) {
@@ -84,10 +95,6 @@ export const Login = () => {
       duration: 3000,
       isClosable: true,
     });
-  };
-
-  const redirectToHomePage = () => {
-    navigate('/');
   };
 
   const onSubmit = () => {
