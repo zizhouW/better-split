@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/better-split/static/css/main.af6a3fde.css",
-    "main.js": "/better-split/static/js/main.5e00c769.js",
+    "main.js": "/better-split/static/js/main.d12d3569.js",
     "index.html": "/better-split/index.html",
     "main.af6a3fde.css.map": "/better-split/static/css/main.af6a3fde.css.map",
-    "main.5e00c769.js.map": "/better-split/static/js/main.5e00c769.js.map"
+    "main.d12d3569.js.map": "/better-split/static/js/main.d12d3569.js.map"
   },
   "entrypoints": [
     "static/css/main.af6a3fde.css",
-    "static/js/main.5e00c769.js"
+    "static/js/main.d12d3569.js"
   ]
 }
