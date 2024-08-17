@@ -61,7 +61,7 @@ export const Transactions = ({ refreshTransactions }) => {
   }
 
   return (
-    <Box py="12px" px="16px" h="100%">
+    <Box py="12px" px="16px" h="100%" overflowY="scroll">
       {render()}
     </Box>
   )
