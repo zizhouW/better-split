@@ -7,6 +7,7 @@ export const Sidebar = ({ users }) => {
   const token = getToken();
 
   const renderOweing = (oweing) => {
+    console.log('test', oweing)
     if (!oweing) return null;
 
     if (oweing > 0) {
@@ -22,7 +23,7 @@ export const Sidebar = ({ users }) => {
       <Stack spacing={4} align="stretch">
         {users?.map?.((user) => {
           if (!user) return null;
-
+          console.log('user', user)
           const isCurrentUser = user.email === token;
           const oweing = user.oweing?.[normalizeEmail(token)];
 

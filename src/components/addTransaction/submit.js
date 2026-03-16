@@ -34,6 +34,8 @@ export const addTransaction = async ({ name, year, month, day, amount, splits })
           currentUserOweings[email] -= value;
         }
       });
+
+      currentUser.oweing = currentUserOweings;
     }
     return currentUser;
   });
@@ -48,6 +50,8 @@ export const addTransaction = async ({ name, year, month, day, amount, splits })
         } else {
           userOweings[currentUserId] += value;
         }
+
+        user.oweing = userOweings;
       }
 
       return user;
